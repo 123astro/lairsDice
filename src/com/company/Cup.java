@@ -1,13 +1,13 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class Cup {
-   // Map<Integer, Integer> dice = new HashMap<>();
-   List<Die> dice = new ArrayList<>();
+
+    List<Die> dice = new ArrayList<>();
+    public Map<Integer, Integer> freq = new HashMap<>();
+
     public int numberOfDice = 5;
 
 
@@ -33,18 +33,31 @@ public class Cup {
         for (Die die : dice) {
             output += die.faceUpValue + " ";
         }
+       // checkDiceArray();
         return output.trim();
+
     }
 
-    public List<Integer> parseDiceToReroll(String input){
+    public List<Integer> parseDiceToReroll(String input) {
         String[] inputArr = input.split(" ");
         List<Integer> selections = new ArrayList<>();
-        for (String number : inputArr){
+        for (String number : inputArr) {
             selections.add(Integer.parseInt(number) - 1);
         }
         return selections.contains(-1) ? new ArrayList<Integer>() : selections;
     }
 
+    public void checkDiceArray() {
+       // Map<Integer, Integer> freq = new HashMap<>();
+        for (Die die : dice) {
+            if (!freq.containsKey(die.faceUpValue)) {
+                freq.put(die.faceUpValue, 1);
+            } else {
+                freq.put(die.faceUpValue, freq.get(die.faceUpValue) + 1);
+            }
+        }
+       System.out.println("worked");
+    }
 
 }
 
