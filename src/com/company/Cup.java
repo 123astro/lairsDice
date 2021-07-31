@@ -7,7 +7,6 @@ public class Cup {
 
     List<Die> dice = new ArrayList<>();
     public Map<Integer, Integer> freq = new HashMap<>();
-
     public int numberOfDice = 5;
 
 
@@ -23,9 +22,24 @@ public class Cup {
     }
 
     public void roll() {
+        System.out.println("New Roll!!!!");
         for (Die die : dice) {
             die.roll();
         }
+        createDiceMap();
+        printNumberOfDiceLeft();
+    }
+
+    public void clearFreq() {
+        freq.clear();
+    }
+
+    public void printNumberOfDiceLeft() {
+        int count = 0 ;
+        for(int i = 0; i < dice.size(); i++){
+            count++;
+        }
+        System.out.println(count + " die in play.");
     }
 
     public String displayCup() {  // display used for end user
@@ -33,7 +47,6 @@ public class Cup {
         for (Die die : dice) {
             output += die.faceUpValue + " ";
         }
-       // checkDiceArray();
         return output.trim();
 
     }
@@ -47,8 +60,7 @@ public class Cup {
         return selections.contains(-1) ? new ArrayList<Integer>() : selections;
     }
 
-    public void checkDiceArray() {
-       // Map<Integer, Integer> freq = new HashMap<>();
+    public void createDiceMap() {
         for (Die die : dice) {
             if (!freq.containsKey(die.faceUpValue)) {
                 freq.put(die.faceUpValue, 1);
@@ -56,7 +68,7 @@ public class Cup {
                 freq.put(die.faceUpValue, freq.get(die.faceUpValue) + 1);
             }
         }
-       System.out.println("worked");
+
     }
 
 }
