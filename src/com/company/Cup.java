@@ -68,7 +68,6 @@ public class Cup {
                 freq.put(die.faceUpValue, freq.get(die.faceUpValue) + 1);
             }
         }
-
     }
 
 }

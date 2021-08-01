@@ -9,9 +9,11 @@ public class LairsDice {
     private Scanner scanner = new Scanner(System.in);
     private final int MIN_PLAYERS = 1;
     private final int MAX_PLAYERS = 6;
-    public int[] previousPlayerDie = new int[1];
-    public int[] guessingPlayerDie = new int[1];
-    public int[] quantity = new int[MAX_PLAYERS];
+    public int[] previousPlayerDieValue = new int[1];
+    public int[] guessingPlayerDieValue = new int[1];
+    public int[] previousPlayerDieQty = new int[1];
+    public int[] guessingPlayerDieQty = new int[1];
+    //public int[] quantity = new int[MAX_PLAYERS];
     public String wasLiar;
 
     public LairsDice() {
@@ -55,33 +57,30 @@ public class LairsDice {
 
     public void getSelections(Player player) {
         System.out.println("Select die for your bid.");
-        previousPlayerDie[0] = scanner.nextInt();
+        previousPlayerDieValue[0] = scanner.nextInt();
         System.out.println("Please enter quantity");
-        quantity[0] = scanner.nextInt();
+        previousPlayerDieQty[0] = scanner.nextInt();
         System.out.println(player.cup.displayCup());
-        System.out.println("Take a guess - Did the previous player lie (yes/no)? ");
-        wasLiar = scanner.next();
-        if (wasLiar.equals("yes")) {
-            callLair1(player);
-        }
+        callLair(player);
         System.out.println(player.cup.displayCup());
         System.out.println("Please enter die number for your bid");
-        guessingPlayerDie[0] = scanner.nextInt();
+        guessingPlayerDieValue[0] = scanner.nextInt();
         System.out.println("Please enter quantity");
-        quantity[1] = scanner.nextInt();
+        guessingPlayerDieQty[0] = scanner.nextInt();
         checkBid();
-
-
     }
 
-    public void callLair1(Player player) {
+
+    public void callLair(Player player) {
+        System.out.println("Take a guess - Did the previous player lie (yes/no)? ");
+        wasLiar = scanner.next();
         player.cup.clearFreq();
         player.cup.createDiceMap();
         //System.out.println("Only " + player.cup.freq.get(previousPlayerDie[0]) + " die/dice in play");
-        if (player.cup.freq.get(previousPlayerDie[0]) < this.quantity[0]) {
-            System.out.println("Previous Player shall lose a die.");
+        if (player.cup.freq.get(previousPlayerDieValue[0]) < previousPlayerDieQty[0]) {
+            System.out.println("Previous Player shall lose a die because they lied.");
         } else {
-            System.out.println("Guessing Player shall lose a die.");
+            System.out.println("Guessing Player shall lose a die because they guessed wrong.");
         }
 
         if (player.cup.dice.size() > 0) {
@@ -90,16 +89,15 @@ public class LairsDice {
             System.out.println("game over");
         }
         player.cup.removeDie();
-        player.cup.clearFreq();
         player.cup.roll();
-        //turn(player);
+
 
     }
 
     public void checkBid(){
-        if (quantity[1] > quantity[0]) {
+        if (guessingPlayerDieQty[0] > previousPlayerDieQty[0]) {
             System.out.println("true1");
-        } else if (quantity[0] == quantity[1] && guessingPlayerDie[0] > previousPlayerDie[0]) {
+        } else if (previousPlayerDieQty[0] == guessingPlayerDieQty[0] && guessingPlayerDieValue[0] > previousPlayerDieValue[0]) {
             System.out.println("true2");
         } else {
             System.out.println("false");
