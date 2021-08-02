@@ -12,7 +12,6 @@ public class LairsDice {
     public int[] currentBid = new int[2];
     public String wasLiar;
 
-
     public LairsDice() {
         System.out.println("How many players?");
         int numberOfPlayers;
@@ -40,7 +39,6 @@ public class LairsDice {
         getSelections(player);
     }
 
-
     public void getSelections(Player player) {
         int valueBid0 = 0;
         int qtyBid1 = 0;
@@ -49,8 +47,8 @@ public class LairsDice {
         System.out.println(player.name + " please enter quantity");
         qtyBid1 = scanner.nextInt();
         if (currentBid[0] == 0) {  // first bid or new round
-            currentBid[0] = valueBid0; // WHEN YOU START GAME = 0
-            currentBid[1] = qtyBid1; // WHEN YOU START GAME = 0
+            currentBid[0] = valueBid0; // WHEN YOU START GAME current bid is  = 0
+            currentBid[1] = qtyBid1; // WHEN YOU START GAME current bid is  = 0
             callLair(player);
         } else {
             isValidSelection(player, qtyBid1, valueBid0); // checking if valid
@@ -58,7 +56,6 @@ public class LairsDice {
         }
         System.out.println(player.cup.displayCup());
     }
-
 
     public void callLair(Player player) {
         System.out.println("Take a guess - Did the previous player lie (yes/no)? ");
@@ -85,7 +82,6 @@ public class LairsDice {
                 isGameOver(player);
                 turn(player);
             }
-
 
         } else if (wasLiar.equals("no")) {
             System.out.println(player.cup.displayCup());
@@ -115,15 +111,15 @@ public class LairsDice {
         }
     }
 
-    public boolean isGameOver(Player player){
+    public void isGameOver(Player player){
         player.cup.diceInPlay(player);
         if (player.cup.amountOfDice > 0) {
             System.out.println("******* Continue game ********");
         } else {
-            System.out.println("game over");
-            return true;
+            System.out.println("*************** Game Over ******************");
+           System.exit(0);
         }
-        return false;
+
     }
 }
 
