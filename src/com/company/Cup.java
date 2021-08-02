@@ -4,10 +4,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Cup {
+    public int amountOfDice;
 
     List<Die> dice = new ArrayList<>();
     public Map<Integer, Integer> freq = new HashMap<>();
     public int numberOfDice = 5;
+
 
 
     public Cup() {
@@ -15,6 +17,10 @@ public class Cup {
             dice.add(new Die());      // remember .add
 
         }
+    }
+
+    public int diceInPlay(Player player){
+      return this.amountOfDice = dice.size();
     }
 
     public void removeDie() {

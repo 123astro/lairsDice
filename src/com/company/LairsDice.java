@@ -1,6 +1,5 @@
 package com.company;
 
-import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,11 +9,9 @@ public class LairsDice {
     private Scanner scanner = new Scanner(System.in);
     private final int MIN_PLAYERS = 1;
     private final int MAX_PLAYERS = 6;
-    //    public int[] PlayerDieValue = new int[2];
-//    public int[] PlayerDieQty = new int[2];
     public int[] currentBid = new int[2];
     public String wasLiar;
-    public int i;
+
 
     public LairsDice() {
         System.out.println("How many players?");
@@ -39,21 +36,10 @@ public class LairsDice {
         }
     }
 
-
-    public void round() {
-    }
-
     public void turn(Player player) {
-
         getSelections(player);
-
     }
 
-    public void makeBid() {
-
-    }
-//  TODO iF someone calls someone a liar, need to reset current bid.
-    // If someone doesn't get called a liar, update the current bid.
 
     public void getSelections(Player player) {
         int valueBid0 = 0;
@@ -70,10 +56,7 @@ public class LairsDice {
             isValidSelection(player, qtyBid1, valueBid0); // checking if valid
             callLair(player);
         }
-
         System.out.println(player.cup.displayCup());
-        //turn(player);
-//        }
     }
 
 
@@ -85,35 +68,29 @@ public class LairsDice {
             player.cup.createDiceMap();
             System.out.println(player.cup.freq);
             if (player.cup.freq.get(currentBid[0]) < currentBid[1]) //qty check
-                {
+            {
                 System.out.println("Previous Player shall lose a die because they lied.");
                 player.cup.removeDie();
                 player.cup.roll();
                 currentBid[0] = 0;
                 currentBid[1] = 0;
+                isGameOver(player);
                 turn(player);
-            }
-            else
-            {
+            } else {
                 System.out.println("Guessing Player shall lose a die because they guessed wrong.");
                 player.cup.removeDie();
                 player.cup.roll();
                 currentBid[0] = 0;
                 currentBid[1] = 0;
+                isGameOver(player);
                 turn(player);
-            }
-
-            if (player.cup.dice.size() > 0) {
-                System.out.println("******* Continue game ********");
-            } else {
-                System.out.println("game over");
-                return;
             }
 
 
         } else if (wasLiar.equals("no")) {
+            System.out.println(player.cup.displayCup());
             getSelections(player);
-            //isValidSelection(PlayerDieQty[0], PlayerDieValue[0], PlayerDieQty[1], PlayerDieValue[1] );
+
         } else {
             System.out.println("Please enter a valid case (yes/no)");
             callLair(player);
@@ -136,10 +113,18 @@ public class LairsDice {
             System.out.println("Try a valid bid");
             getSelections(player);
         }
-
-
     }
 
+    public boolean isGameOver(Player player){
+        player.cup.diceInPlay(player);
+        if (player.cup.amountOfDice > 0) {
+            System.out.println("******* Continue game ********");
+        } else {
+            System.out.println("game over");
+            return true;
+        }
+        return false;
+    }
 }
 
 
