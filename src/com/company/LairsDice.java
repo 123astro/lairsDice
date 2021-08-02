@@ -62,17 +62,17 @@ public class LairsDice {
         valueBid0 = scanner.nextInt();
         System.out.println(player.name + " please enter quantity");
         qtyBid1 = scanner.nextInt();
-        if (currentBid[0] == 0) {
-            currentBid[0] = valueBid0;
-            currentBid[1] = qtyBid1;
+        if (currentBid[0] == 0) {  // first bid or new round
+            currentBid[0] = valueBid0; // WHEN YOU START GAME = 0
+            currentBid[1] = qtyBid1; // WHEN YOU START GAME = 0
             callLair(player);
         } else {
-            isValidSelection(qtyBid1, valueBid0);
+            isValidSelection(player, qtyBid1, valueBid0); // checking if valid
             callLair(player);
         }
 
         System.out.println(player.cup.displayCup());
-        turn(player);
+        //turn(player);
 //        }
     }
 
@@ -84,13 +84,23 @@ public class LairsDice {
             player.cup.clearFreq();
             player.cup.createDiceMap();
             System.out.println(player.cup.freq);
-            if (player.cup.freq.get(currentBid[0]) < currentBid[1]){
+            if (player.cup.freq.get(currentBid[0]) < currentBid[1]) //qty check
+                {
                 System.out.println("Previous Player shall lose a die because they lied.");
                 player.cup.removeDie();
-
-            } else{
+                player.cup.roll();
+                currentBid[0] = 0;
+                currentBid[1] = 0;
+                turn(player);
+            }
+            else
+            {
                 System.out.println("Guessing Player shall lose a die because they guessed wrong.");
                 player.cup.removeDie();
+                player.cup.roll();
+                currentBid[0] = 0;
+                currentBid[1] = 0;
+                turn(player);
             }
 
             if (player.cup.dice.size() > 0) {
@@ -111,19 +121,20 @@ public class LairsDice {
         play();
     }
 
-    public void isValidSelection(int currentQty, int currentValue) {
+    public void isValidSelection(Player player, int currentQty, int currentValue) {
         int previousValue = currentBid[0];
         int previousQty = currentBid[1];
         if (currentQty > previousQty) {
             System.out.println("valid q");
-
+            callLair(player);
 
         } else if (previousQty == currentQty && currentValue > previousValue) {
             System.out.println("valid V");
+            callLair(player);
 
         } else {
-            System.out.println("invalid");
-
+            System.out.println("Try a valid bid");
+            getSelections(player);
         }
 
 
