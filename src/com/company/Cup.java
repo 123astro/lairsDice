@@ -19,8 +19,8 @@ public class Cup {
         }
     }
 
-    public int diceInPlay(Player player){
-      return this.amountOfDice = dice.size();
+    public void diceInPlay(Player player){
+      this.amountOfDice = dice.size();
     }
 
     public void removeDie() {
