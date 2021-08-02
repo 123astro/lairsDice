@@ -26,21 +26,24 @@ public class Cup {
         for (Die die : dice) {
             die.roll();
         }
-        createDiceMap();
+
         printNumberOfDiceLeft();
     }
+
+    public void printNumberOfDiceLeft() {
+        int count = 0;
+        for (int i = 0; i < dice.size(); i++) {
+            count++;
+        }
+        System.out.println(count + " die in play.");
+        System.out.println(displayCup());
+    }
+
 
     public void clearFreq() {
         freq.clear();
     }
 
-    public void printNumberOfDiceLeft() {
-        int count = 0 ;
-        for(int i = 0; i < dice.size(); i++){
-            count++;
-        }
-        System.out.println(count + " die in play.");
-    }
 
     public String displayCup() {  // display used for end user
         String output = ""; // assign output a blank string
@@ -51,14 +54,6 @@ public class Cup {
 
     }
 
-    public List<Integer> parseDiceToReroll(String input) {
-        String[] inputArr = input.split(" ");
-        List<Integer> selections = new ArrayList<>();
-        for (String number : inputArr) {
-            selections.add(Integer.parseInt(number) - 1);
-        }
-        return selections.contains(-1) ? new ArrayList<Integer>() : selections;
-    }
 
     public void createDiceMap() {
         for (Die die : dice) {

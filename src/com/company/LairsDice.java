@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,17 +10,15 @@ public class LairsDice {
     private Scanner scanner = new Scanner(System.in);
     private final int MIN_PLAYERS = 1;
     private final int MAX_PLAYERS = 6;
-    public int[] previousPlayerDieValue = new int[1];
-    public int[] guessingPlayerDieValue = new int[1];
-    public int[] previousPlayerDieQty = new int[1];
-    public int[] guessingPlayerDieQty = new int[1];
-    //public int[] quantity = new int[MAX_PLAYERS];
+    //    public int[] PlayerDieValue = new int[2];
+//    public int[] PlayerDieQty = new int[2];
+    public int[] currentBid = new int[2];
     public String wasLiar;
+    public int i;
 
     public LairsDice() {
         System.out.println("How many players?");
         int numberOfPlayers;
-
         do {
             numberOfPlayers = scanner.nextInt();
             scanner.nextLine();
@@ -33,13 +32,11 @@ public class LairsDice {
 
     public void play() {
         for (Player player : players) {
-            turn(player);
-
+            System.out.println(player.name + "'s turn, press enter");
+            scanner.nextLine();
+            player.cup.roll();
+            getSelections(player);
         }
-    }
-
-    public void display(Player player) {
-        System.out.println(player.cup.displayCup());
     }
 
 
@@ -47,85 +44,94 @@ public class LairsDice {
     }
 
     public void turn(Player player) {
-        System.out.println(player.name + "'s turn, press enter");
-        scanner.nextLine();
-        player.cup.roll();
-        System.out.println(player.cup.displayCup());
+
         getSelections(player);
+
     }
 
+    public void makeBid() {
+
+    }
+//  TODO iF someone calls someone a liar, need to reset current bid.
+    // If someone doesn't get called a liar, update the current bid.
 
     public void getSelections(Player player) {
-        System.out.println("Select die for your bid.");
-        previousPlayerDieValue[0] = scanner.nextInt();
-        System.out.println("Please enter quantity");
-        previousPlayerDieQty[0] = scanner.nextInt();
+        int valueBid0 = 0;
+        int qtyBid1 = 0;
+        System.out.println(player.name + " select a die value.");
+        valueBid0 = scanner.nextInt();
+        System.out.println(player.name + " please enter quantity");
+        qtyBid1 = scanner.nextInt();
+        if (currentBid[0] == 0) {
+            currentBid[0] = valueBid0;
+            currentBid[1] = qtyBid1;
+            callLair(player);
+        } else {
+            isValidSelection(qtyBid1, valueBid0);
+            callLair(player);
+        }
+
         System.out.println(player.cup.displayCup());
-        callLair(player);
-        System.out.println(player.cup.displayCup());
-        System.out.println("Please enter die number for your bid");
-        guessingPlayerDieValue[0] = scanner.nextInt();
-        System.out.println("Please enter quantity");
-        guessingPlayerDieQty[0] = scanner.nextInt();
-        checkBid();
+        turn(player);
+//        }
     }
 
 
     public void callLair(Player player) {
         System.out.println("Take a guess - Did the previous player lie (yes/no)? ");
         wasLiar = scanner.next();
-        player.cup.clearFreq();
-        player.cup.createDiceMap();
-        //System.out.println("Only " + player.cup.freq.get(previousPlayerDie[0]) + " die/dice in play");
-        if (player.cup.freq.get(previousPlayerDieValue[0]) < previousPlayerDieQty[0]) {
-            System.out.println("Previous Player shall lose a die because they lied.");
-        } else {
-            System.out.println("Guessing Player shall lose a die because they guessed wrong.");
-        }
+        if (wasLiar.equals("yes")) {
+            player.cup.clearFreq();
+            player.cup.createDiceMap();
+            System.out.println(player.cup.freq);
+            if (player.cup.freq.get(currentBid[0]) < currentBid[1]){
+                System.out.println("Previous Player shall lose a die because they lied.");
+                player.cup.removeDie();
 
-        if (player.cup.dice.size() > 0) {
-            System.out.println("******* Continue game ********");
+            } else{
+                System.out.println("Guessing Player shall lose a die because they guessed wrong.");
+                player.cup.removeDie();
+            }
+
+            if (player.cup.dice.size() > 0) {
+                System.out.println("******* Continue game ********");
+            } else {
+                System.out.println("game over");
+                return;
+            }
+
+
+        } else if (wasLiar.equals("no")) {
+            getSelections(player);
+            //isValidSelection(PlayerDieQty[0], PlayerDieValue[0], PlayerDieQty[1], PlayerDieValue[1] );
         } else {
-            System.out.println("game over");
+            System.out.println("Please enter a valid case (yes/no)");
+            callLair(player);
         }
-        player.cup.removeDie();
-        player.cup.roll();
+        play();
+    }
+
+    public void isValidSelection(int currentQty, int currentValue) {
+        int previousValue = currentBid[0];
+        int previousQty = currentBid[1];
+        if (currentQty > previousQty) {
+            System.out.println("valid q");
+
+
+        } else if (previousQty == currentQty && currentValue > previousValue) {
+            System.out.println("valid V");
+
+        } else {
+            System.out.println("invalid");
+
+        }
 
 
     }
 
-    public void checkBid(){
-        if (guessingPlayerDieQty[0] > previousPlayerDieQty[0]) {
-            System.out.println("true1");
-        } else if (previousPlayerDieQty[0] == guessingPlayerDieQty[0] && guessingPlayerDieValue[0] > previousPlayerDieValue[0]) {
-            System.out.println("true2");
-        } else {
-            System.out.println("false");
-        }
-
-
-    }
 }
 
 
-//
-//        public void round(){
-//            for (Player activePlayer : players) {
-//                turn(activePlayer);
-//        }
-//
-//        public void turn(Player activePlayer){
-//
-//            }
-//
-//    public void getSelections (Player activePlayer){
-//        System.out.println("Select dice you want to re-roll (1-5) ?");
-//        String input = scanner.nextLine(); // "1 2 5"
-//        if (input.equals("")) return;
-//        activePlayer.cup.roll(activePlayer.cup.parseDiceToReroll(input));
-//
-//    }
-//}
 
 
 
