@@ -113,17 +113,16 @@ public class LairsDice {
         if (previousQty == currentQty && currentValue == previousValue) {
             System.out.println("Try again - invalid bid!");
             getSelections(player);
-        }
-//        else if(setValueBid == currentBid[0] && setQtyBid == currentBid[1]){
-//            System.out.println("Try again - invalid bid!");
-//            getSelections(player);
-//        }
-        else if (currentQty > previousQty) {
-            System.out.println("valid q");
+        } else if (currentQty > previousQty) {
+            //System.out.println("valid q");
+            currentBid[0] = currentValue;
+            currentBid[1] = currentQty;
             callLair(player);
 
         } else if (previousQty == currentQty && currentValue > previousValue) {
-            System.out.println("valid V");
+            //System.out.println("valid V");
+            currentBid[0] = currentValue;
+            currentBid[1] = currentQty;
             callLair(player);
 
         } else {
