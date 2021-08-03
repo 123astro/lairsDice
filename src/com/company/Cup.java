@@ -1,15 +1,14 @@
 package com.company;
 
-import java.nio.charset.StandardCharsets;
+
 import java.util.*;
 
 public class Cup {
     public int amountOfDice;
 
-    List<Die> dice = new ArrayList<>();
-    public Map<Integer, Integer> freq = new HashMap<>();
-    public int numberOfDice = 5;
-
+    public List<Die> dice = new ArrayList<>();
+    //public static Map<Integer, Integer> freq = new HashMap<>();
+    public int numberOfDice = 3;
 
 
     public Cup() {
@@ -19,8 +18,8 @@ public class Cup {
         }
     }
 
-    public void diceInPlay(Player player){
-      this.amountOfDice = dice.size();
+    public void diceInPlay(Player activePlayer) {
+        this.amountOfDice = dice.size();
     }
 
     public void removeDie() {
@@ -28,12 +27,11 @@ public class Cup {
     }
 
     public void roll() {
-        System.out.println("New Roll!!!!");
+        //System.out.println("New Roll!!!!");
         for (Die die : dice) {
             die.roll();
         }
-
-        printNumberOfDiceLeft();
+        //printNumberOfDiceLeft();
     }
 
     public void printNumberOfDiceLeft() {
@@ -42,13 +40,12 @@ public class Cup {
             count++;
         }
         System.out.println(count + " die in play.");
-        System.out.println(displayCup());
+
     }
 
-
-    public void clearFreq() {
-        freq.clear();
-    }
+//    public void clearFreq() {
+//        freq.clear();
+//    }
 
 
     public String displayCup() {  // display used for end user
@@ -57,18 +54,6 @@ public class Cup {
             output += die.faceUpValue + " ";
         }
         return output.trim();
-
-    }
-
-
-    public void createDiceMap() {
-        for (Die die : dice) {
-            if (!freq.containsKey(die.faceUpValue)) {
-                freq.put(die.faceUpValue, 1);
-            } else {
-                freq.put(die.faceUpValue, freq.get(die.faceUpValue) + 1);
-            }
-        }
     }
 
 }
