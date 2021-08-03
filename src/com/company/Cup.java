@@ -27,7 +27,7 @@ public class Cup {
     }
 
     public void roll() {
-        //System.out.println("New Roll!!!!");
+
         for (Die die : dice) {
             die.roll();
         }

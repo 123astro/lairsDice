@@ -27,53 +27,69 @@ public class LiarsDice {
     }
 
     public void play() {
-        while(players.size() > 1 ){
+        while (players.size() > 1) {
             round();
         }
-    //TODO declare winner
+        //TODO declare winner
         System.out.println(getActivePlayer().name + " Winner");
     }
 
-    public Player getActivePlayer(){
-       return players.get(activePlayerIndex);
+    public Player getActivePlayer() {
+        return players.get(activePlayerIndex);
     }
 
-    public void endTurn(){
-        if(activePlayerIndex == (players.size() - 1)){
+    public void endTurn() {
+        if (activePlayerIndex == (players.size() - 1)) {
             activePlayerIndex = 0;
         } else {
             activePlayerIndex += 1;
         }
     }
 
-    public void roll() {
+    public void rollAll() {
         for (Player activePlayer : players) {
             activePlayer.cup.roll();
             createDiceMap(activePlayer.cup.dice);
         }
+        System.out.println("New Roll!!!!");
     }
 
-//         if (getActivePlayer().cup.dice.size() < 1 ) {
-//        players.remove(getActivePlayer());
-//        endTurn();
-//    }
+
+    public void removePlayer() {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).cup.dice.size() < 1) {
+                if (i == players.size() - 1) {
+                    endTurn();
+                }
+                players.remove(i);
+                break;
+            }
+        }
+
+    }
+
 
     public void round() {
-        roll();
+        rollAll();
         boolean isRoundOver = false;
+        boolean isTurnOne = true;
         while (!isRoundOver) {
 
-                System.out.println(getActivePlayer().name + "'s turn, press enter");
-                scanner.nextLine();
+            System.out.println(getActivePlayer().name + "'s turn");
+            if (!isTurnOne) {
                 isRoundOver = callLiar(getActivePlayer());
-                if(isRoundOver){
-                    break;
-                }
-                turn(getActivePlayer());
+            } else {
+                isTurnOne = false;
             }
+            if (isRoundOver) {
+                break;
+            }
+            turn(getActivePlayer());
+        }
         zeroOutCurrentBid();
         clearFreq();
-        }
+        removePlayer();
+    }
 
     public void turn(Player activePlayer) {
         System.out.println(activePlayer.cup.displayCup());
