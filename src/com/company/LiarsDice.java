@@ -20,6 +20,12 @@ public class LiarsDice {
             numberOfPlayers = scanner.nextInt();
             scanner.nextLine();
         } while (numberOfPlayers < MIN_PLAYERS || numberOfPlayers > MAX_PLAYERS);
+        System.out.println("How many dice would you like to play with?");
+        do {
+            scanForIntOnly();
+            Cup.numberOfDice = scanner.nextInt();
+            scanner.nextLine();
+        } while (Cup.numberOfDice == 0);
         // ADD PLAYER TO LIST WITH NAME
         while (players.size() < numberOfPlayers) {
             System.out.println("What is your name?");
@@ -32,7 +38,7 @@ public class LiarsDice {
             // greater than 1 => rounds continue
             round();
         }
-        System.out.println(players.get(0).name + "'s the Winner,  Winner, Winner, Chicken dinner!!!!");  // end of game
+        System.out.println(players.get(0).name + "'s the Winner,  Winner, Winner, Chicken dinner!!!!"); // end of game
     }
 
     public void round() {
@@ -40,9 +46,9 @@ public class LiarsDice {
         boolean isRoundOver = false; // callLair turns isRoundOver to turn if user believes previous player lied.
         boolean isTurnOne = true;  // safeguard => no prompt if liar prior to bidding. First turn of round only!
         while (!isRoundOver) { // while loop continues until lair method returns True.
-            // clearScreen();
             System.out.println(getActivePlayer().name + "'s turn"); // inform who's turn it is and invoke the
             // getActivePlayer method which is the index of the player out of players list.
+            System.out.println(getActivePlayer().cup.displayCup());
             if (!isTurnOne) {    // turn one is true and set to false bc the else is executed.
                 isRoundOver = callLiar(getActivePlayer());
             } else {
@@ -68,16 +74,16 @@ public class LiarsDice {
         // dice in play.
     }
 
-    public Player getActivePlayer() {  // returns active players index pointer out of players list. **Player is the data
-        // type.
+    public Player getActivePlayer() { // returns active players index pointer out of players list. **Player is the data
+       // type.
         return players.get(activePlayerIndex); // getting players index that has players reference pointer.
         // activePlayerIndex is a static int that is set to 0 to start.
     }
 
     public void turn(Player activePlayer) {
-        System.out.println(activePlayer.cup.displayCup());
         getSelections(activePlayer); // invoke getSelections
         setNextPlayersTurn(); // invoke to set the next players turn
+        clearScreen();
     }
 
     public void getSelections(Player activePlayer) {
@@ -85,6 +91,7 @@ public class LiarsDice {
         int qtyBid1 = 0;  //clears out
 
         System.out.println(activePlayer.name + " select a die value.");
+
         scanForIntOnly(); //check for integer
         valueBid0 = scanner.nextInt();
 
@@ -101,22 +108,24 @@ public class LiarsDice {
     }
 
     public void scanForIntOnly(){
-        while (!scanner.hasNextInt()){    // while loop = prompt user if an int wasn't entered
+        while (!scanner.hasNextInt()){  // while loop = prompt user if an int wasn't entered
             System.out.println("Input is not a number!!!!");
             scanner.nextLine();
         }
     }
 
+    public void doesDieExistInRoll() {
+
+    }
+
     public void setNextPlayersTurn() {
-        if (activePlayerIndex == (players.size() - 1)) { // testing if activeplayer index is equal to the size of the
-            // list and - 1 for that index. This will set the new activeplayer to zero => start at the beginning again.
+        if (activePlayerIndex == (players.size() - 1)) { // testing if activePlayer index is equal to the size of the
+            // list and - 1 for that index. This will set the new activePlayer to zero => start at the beginning again.
             activePlayerIndex = 0;
         } else {
             activePlayerIndex += 1; //activePlayer is increment to the next player in the list.
         }
     }
-
-
 
     public int numberOfDiceInPlay() { // counts the values is the hash map.
         int num2 = 0;
@@ -126,10 +135,9 @@ public class LiarsDice {
         return num2;
     }
 
-
     public void removePlayer() { // players are in the Player list.
         for (int i = 0; i < players.size(); i++) { // setup loop
-            if (players.get(i).cup.dice.size() < 1) { //go thru the list of players and verify they have more than
+            if (players.get(i).cup.dice.size() < 1) { //go through the list of players and verify they have more than
                 // one die.
                 if (i == players.size() - 1) { // if i (index of that player) is equal to the last players index (using
                     // player.size - 1 for the index)  - you need to setNextPlayerTurn to remove the proper player
@@ -147,14 +155,13 @@ public class LiarsDice {
         }
     }
 
-
     public void zeroOutCurrentBid() {  //used after liar has need called and the while loop in round is exited.
         currentBid[0] = 0;
         currentBid[1] = 0;
     }
 
     public boolean callLiar(Player activePlayer) {  // call liar logic
-        System.out.println("Take a guess - Did the previous player lie (y/n)? ");
+        System.out.println("Take a guess - Did " + getPreviousPlayer().name + " lie (y/n)? ");
         wasLiar = scanner.next();
         if (wasLiar.equals("y") || wasLiar.equals("yes")) {
             System.out.println(activePlayer.name + " guessed yes that " + getPreviousPlayer().name + " lied!");
@@ -207,7 +214,6 @@ public class LiarsDice {
             getSelections(activePlayer);
         }
     }
-
 
     public void diceFreqMap(List<Die> dice) {  // frequency of dice OR quantities of each die.
         for (Die die : dice) {
