@@ -4,22 +4,19 @@ import java.util.*;
 
 public class LiarsDice {
     public List<Player> players = new ArrayList<>();
-    private Scanner scanner = new Scanner(System.in);
+    public Scanner scanner = new Scanner(System.in);
     private final int MIN_PLAYERS = 2;
     private final int MAX_PLAYERS = 6;
-    public int[] currentBid = new int[2];
+    public int[] currentBid = new int[2]; // compare the scanned in values to the previous scanned in values
     public String wasLiar;
     public int numberOfPlayers;
     public static Map<Integer, Integer> freq = new HashMap<>();
-    public int activePlayerIndex = 0;
+    private int activePlayerIndex = 0;
 
     public LiarsDice() {
         System.out.println("How many players (2 through 6)?");
         do {
-            while (!scanner.hasNextInt()){  // while loop = prompt user if an int wasn't entered
-                System.out.println("Input is not a number");
-                scanner.nextLine();
-            }
+            scanForIntOnly();
             numberOfPlayers = scanner.nextInt();
             scanner.nextLine();
         } while (numberOfPlayers < MIN_PLAYERS || numberOfPlayers > MAX_PLAYERS);
@@ -31,10 +28,11 @@ public class LiarsDice {
     }
 
     public void play() {
-        while (players.size() > 1) {  // game doesn't end until the players list is no longer greater than 1
+        while (players.size() > 1) {  // game doesn't end until player size is no longer
+            // greater than 1 => rounds continue
             round();
         }
-        System.out.println(getActivePlayer().name + " Winner,  Winner, Chicken dinner!!!!");  // end of game
+        System.out.println(players.get(0).name + "'s the Winner,  Winner, Winner, Chicken dinner!!!!");  // end of game
     }
 
     public void round() {
@@ -61,12 +59,13 @@ public class LiarsDice {
     }
 
     public void rollAll() {
-        for (Player activePlayer : players) {
-            activePlayer.cup.roll();
-            diceFreqMap(activePlayer.cup.dice);
+        for (Player activePlayer : players) { //assign the activePlayer to each player in players list.
+            activePlayer.cup.roll(); // roll player's dice
+            diceFreqMap(activePlayer.cup.dice); //  take the active players dice and add to freq map
         }
-        System.out.println("New Roll!!!!");
-        System.out.println("There are " + numberOfDiceInPlay() + " dice in play now.");
+        System.out.println("New Roll!!!!"); // print out new roll
+        System.out.println("There are " + numberOfDiceInPlay() + " dice in play now."); // announce the number of
+        // dice in play.
     }
 
     public Player getActivePlayer() {  // returns active players index pointer out of players list. **Player is the data
@@ -86,16 +85,11 @@ public class LiarsDice {
         int qtyBid1 = 0;  //clears out
 
         System.out.println(activePlayer.name + " select a die value.");
-        while (!scanner.hasNextInt()){  // while loop = prompt user if an int wasn't entered
-            System.out.println("Input is not a number");
-            scanner.nextLine();
-        }
+        scanForIntOnly(); //check for integer
         valueBid0 = scanner.nextInt();
+
         System.out.println(activePlayer.name + " please enter the quantity of that die value");
-        while (!scanner.hasNextInt()){    // while loop = prompt user if an int wasn't entered
-            System.out.println("Input is not a number");
-            scanner.nextLine();
-        }
+        scanForIntOnly(); //check for integer
         qtyBid1 = scanner.nextInt();
 
         if (currentBid[0] == 0) {  // first bid or new ROUND
@@ -103,6 +97,13 @@ public class LiarsDice {
             currentBid[1] = qtyBid1;// WHEN YOU START GAME current bid is  = 0
         } else {
             isValidSelection(activePlayer, qtyBid1, valueBid0); // After first round => checking if valid bids
+        }
+    }
+
+    public void scanForIntOnly(){
+        while (!scanner.hasNextInt()){    // while loop = prompt user if an int wasn't entered
+            System.out.println("Input is not a number!!!!");
+            scanner.nextLine();
         }
     }
 
@@ -114,6 +115,7 @@ public class LiarsDice {
             activePlayerIndex += 1; //activePlayer is increment to the next player in the list.
         }
     }
+
 
 
     public int numberOfDiceInPlay() { // counts the values is the hash map.
