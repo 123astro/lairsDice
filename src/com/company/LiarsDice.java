@@ -75,7 +75,7 @@ public class LiarsDice {
     }
 
     public Player getActivePlayer() { // returns active players index pointer out of players list. **Player is the data
-       // type.
+        // type.
         return players.get(activePlayerIndex); // getting players index that has players reference pointer.
         // activePlayerIndex is a static int that is set to 0 to start.
     }
@@ -91,7 +91,6 @@ public class LiarsDice {
         int qtyBid1 = 0;  //clears out
 
         System.out.println(activePlayer.name + " select a die value.");
-
         scanForIntOnly(); //check for integer
         valueBid0 = scanner.nextInt();
 
@@ -107,16 +106,13 @@ public class LiarsDice {
         }
     }
 
-    public void scanForIntOnly(){
-        while (!scanner.hasNextInt()){  // while loop = prompt user if an int wasn't entered
+    public void scanForIntOnly() {
+        while (!scanner.hasNextInt()) {  // while loop = prompt user if an int wasn't entered
             System.out.println("Input is not a number!!!!");
             scanner.nextLine();
         }
     }
 
-    public void doesDieExistInRoll() {
-
-    }
 
     public void setNextPlayersTurn() {
         if (activePlayerIndex == (players.size() - 1)) { // testing if activePlayer index is equal to the size of the
@@ -165,8 +161,9 @@ public class LiarsDice {
         wasLiar = scanner.next();
         if (wasLiar.equals("y") || wasLiar.equals("yes")) {
             System.out.println(activePlayer.name + " guessed yes that " + getPreviousPlayer().name + " lied!");
-            if (freq.get(currentBid[0]) < currentBid[1])//qty check => to retrieve qty in freq map, you need to pass the
-                // value and the get() will report the qty.
+
+            if ((freq.get(currentBid[0]) == null) || (freq.get(currentBid[0]) < currentBid[1]))//qty check => to
+                // retrieve qty in freq map, you need to pass the value and the get() will return the qty.
             {
                 System.out.println(getPreviousPlayer().name + " LIED and loses a die! \nBelow has the list of " +
                         "dice values and quantities for that round.");
